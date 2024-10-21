@@ -28,7 +28,7 @@ INTERFACE  -  Seleção de polígonos para troca de cor.
 
 Então cada pare da tela vai ser uma classe de um widget.
     Para fazer a comunicação entre eles, usaríamos um singleton? ou funções od widget pai? (o QMainWindow)
-    Fuck it global vars
+
 
 
 
