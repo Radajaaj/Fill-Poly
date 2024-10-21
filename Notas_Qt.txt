@@ -1,0 +1,46 @@
+QSize vai definir o tamanho de uma window.
+        Podemos considerar esse como sendo o SRU (que o user poderá definir)
+        Daí o programa converte pra SRN, e o FillPoly executa em SRT.
+    Dentro da classe da window, colocamos p.ex.:
+        self.setFixedSize(QSize(400, 300))
+    Tambem temos SetMinimumSize e SetMaximumSize!
+    Esses métodos podem ser usados em QUALQUER widget.  ->  a.k.a dá pra deixar a telinha de desenho de tamanho fixo, aparentemente.
+
+Conexão front-back é feita com o uso de (signals e slots) ou (eventos).
+
+Signals/triggers e slots:
+    Sempre que um widget é usado ele solta um signal. Podemos conectar esse signal a uma função ou a outro widget (o slot).
+
+Eventos:
+    Toda interação com o usuário é um evento.
+    Para isso, sobrecarregamos os checadores de eventos padrão da classe da nossa janela.
+    ATENÇÂO: Eventos de mouse ficam armazenamos no objeto QMouseEvent
+        Um dos metodos paara ler o evento nesse objeto é o .position()
+        Ele provê a posição global e LOCAL (widget-relative) do evento
+
+
+INTERFACE  -  Seleção de polígonos para troca de cor.
+    Pode ser feito por uma ComboBox (Teste11_ComboBox.py).
+    combobox.additem e combobox.removeitem
+        Para adicionar e remover da comobox -- Sincronizar sempre com a lista de poligonos.
+    Outra coisa: tem diferença entre os sinais IndexChanged e TextChanged. Cuidar disso.
+
+
+Então cada pare da tela vai ser uma classe de um widget.
+    Para fazer a comunicação entre eles, usaríamos um singleton? ou funções od widget pai? (o QMainWindow)
+    Fuck it global vars
+
+
+
+
+
+
+
+
+
+O desenhador de linhas:
+    Poligono.vertices vai ser um vetor de QPoint's.
+    Para desenhar algo, primeiro iniciamos um QPainter no nosso canvas
+    Depois usamos uma função para desenhar algo nele.
+    Linhas são desenhadas com painter.drawLine(QPoint, QPoint)
+    Pixels são feito com painter.drawPoint(QPoint)

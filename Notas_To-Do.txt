@@ -1,0 +1,53 @@
+Basicamente, algoritmo FillPoly, conforme: https://www.inf.unioeste.br/~adair/CG/Software/FillPolyv1.1/
+Filpolly é executado no universo 2D, com coordenadas do Software
+
+
+Entrada:        Coordenadas dos vértieces do polígono + Cor de cada vértice
+Processamento:  INCREMENTAL. 
+
+
+
+_______________________
+_---    O PLANO    ---_
+_----passo-a-passo----_
+
+1 - Aplicação simples que desenha retas na tela, a partir de 2 cliques do usuário. (Aresta armazenadas em vetores)
+Reta<vector> Cor, Vertice1, Vertice2
+A aresta vai ser pintada com a cor selecionada.
+A cor é definida no terminal.
+
+
+2 - Permitir varias retas diferentes. Retas novas são desenhadas em cima das anteriores.
+
+
+3 - Transformar isso no algoritmo do pintor. Basicamente:
+Retas<vector> - Reta1, Reta2, Reta3, Reta4, ...
+Botão para re-renderizar: vai renderizando em ordem.
+
+
+4 - Suporte para múltiplos vértices -> se transforma num polígono.
+Botão esquerda: novo vértice.
+Botão direito : Último vértice, se conecta com o primeiro por uma reta nova.
+Sempre que um novo vértice é definido, ele se conecta ao último vértice inserido.
+    - Esse último vértice fica num buffer, para fácil acesso.
+Método CV2.lines(). Executado em ordem crescente pelo algortimo do pintor
+
+Daí depois de implementar a pinta de polígonos, o algoritmo do pintor vai ter que ter uma gambiarra:
+    Posições pares:   pinta o polígono
+    Posições ímpares: Pinta suas respectivas arestas
+Isso garante que o polígono não fique em cima das arestas (que tem cores diferentes).
+
+
+5 - Esqueminha para selecionar diferentes polígonos (req5: selecionar um poligono e trocar sua cor de preenchimento.) Seletor drop down.
+    Nota extra: Se essa seleção for com o mouse. 
+    Como fazer isso? Deve ter biblioteca que faz, mas seria interessante fazer com o alg. do pintor.
+
+
+6 - Implementação do FillPoly em si. Não deve ser mais difícil que fazer toda a interface gráfica.
+
+
+
+
+
+
+OK, talvez seja melhor fazer a interface primeiro, mesmo.
