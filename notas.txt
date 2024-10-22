@@ -1,0 +1,7 @@
+se der ruim é por causa dos selfs, parents, etc que tem na inicialização da classe Poligono()
+
+TO-DO:
+    *   Botão "Adicionar Polígono"  FEITO
+    *   ItemIsSelectable            FEITO
+    *   Quando se desenha uma reta, se faz um addtogroup
+            E quando se redesenha, faz so um removeitem. Talvez dê problema.

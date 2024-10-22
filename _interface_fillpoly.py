@@ -1,10 +1,11 @@
-from widgets import *
-
-
-
+from _widgets import *
 
 
 class MainWindow(QMainWindow):
+    corArestaChanged = pyqtSignal(QColor)           # Signals que vão transmitir as trocas de cores feitas pelos usuários
+    corPoligonoChanged = pyqtSignal(QColor)         
+    
+        
     def __init__(self):
         super().__init__()
         
@@ -34,7 +35,7 @@ class MainWindow(QMainWindow):
         self.titulo2 = Titulo2("Selecionar Polígono:")
         LayoutBarraEsquerda.addWidget(self.titulo2)
         self.comboBox = ComboBoxPoligonos()
-        
+    
         self.comboBox.currentIndexChanged.connect(self.comboBoxClicada)
         
         LayoutBarraEsquerda.addWidget(self.comboBox)  # Checkbox para selecionar polígonos
@@ -63,7 +64,16 @@ class MainWindow(QMainWindow):
         LayoutBarraEsquerda.addWidget(QWidget())
         
         
-        # Botões para apagar, redesenhar, e reiniciar o programa
+        # Botões para apagar, redesenhar, e reiniciar o programa. E iniciar processo de criação de um novo polígono.
+        
+        self.botaoPonto = QPushButton("Adicionar Ponto")
+        self.botaoPonto.clicked.connect(self.adicionar_ponto)
+        LayoutBarraEsquerda.addWidget(self.botaoPonto)
+        
+        self.botaoNovo = QPushButton("Adicionar Polígono")
+        self.botaoNovo.clicked.connect(self.adicionar_poligono)
+        LayoutBarraEsquerda.addWidget(self.botaoNovo)
+        
         self.botaoDeletar = QPushButton("Deletar Polígono")
         self.botaoDeletar.clicked.connect(self.deletar_poligono)
         LayoutBarraEsquerda.addWidget(self.botaoDeletar)
@@ -85,6 +95,12 @@ class MainWindow(QMainWindow):
         LayoutBaixo.addWidget(self.telaDesenho)
         LayoutBaixo.setStretch(0, 1)
         LayoutBaixo.setStretch(1, 8)
+        
+        
+
+        self.corArestaChanged.connect(self.telaDesenho.updateCorAresta)     #Conectamos os sinais de trocas de cores com
+        self.corPoligonoChanged.connect(self.telaDesenho.updateCorPoligono)     #as funç~eos do widget filho.
+                                                                                #agora, basta usar signal.emit() de forma dinâmica!
 
         LayoutPrincipal.addLayout(LayoutBaixo)
         LayoutPrincipal.setStretch(0, 1)
@@ -94,17 +110,27 @@ class MainWindow(QMainWindow):
         widget.setLayout(LayoutPrincipal)
         self.setCentralWidget(widget)
         
-    
+        self.testx, self.testy, = 0, 0
     
     def comboBoxClicada(self):
         
         comboIndex = self.comboBox.currentIndex()
-        if 0 <= comboIndex < len(ListaPoligonos):
-            poligon = ListaPoligonos[comboIndex]
+        
+        if comboIndex == 0:  # This is the "None" option
+            print("Novo polígono selecionado na combobox")
+            return
+        
+        
+        if 1 <= comboIndex < len(ListaPoligonos) + 1:
+            poligon = ListaPoligonos[comboIndex - 1]
             #print("Combobox clicada! Current index: ", comboIndex, poligon)
 
             self.botaoCorArestas.setStyleSheet(f"background-color: {poligon.cor_arestas.name()}; color: {poligon.cor_arestas.name()}")
             self.botaoCorPoligono.setStyleSheet(f"background-color: {poligon.cor_poligono.name()}; color: {poligon.cor_poligono.name()}")
+            
+            self.corArestaChanged.emit(poligon.cor_arestas)
+            self.corPoligonoChanged.emit(poligon.cor_poligono)
+            
     
     
 
@@ -114,10 +140,13 @@ class MainWindow(QMainWindow):
             print(f"Cor do Polígono: {color.name()}")  # Exibe a cor selecionada
             self.botaoCorPoligono.setStyleSheet(f"background-color: {color.name()}; color: {color.name()}")
             
-            comboIndex = self.comboBox.currentIndex()
-            poligon = ListaPoligonos[comboIndex]
-            poligon.cor_poligono = color
+            self.corPoligonoChanged.emit(color)
             
+            comboIndex = self.comboBox.currentIndex() - 1
+            if 0 <= comboIndex < len(ListaPoligonos):
+                poligon = ListaPoligonos[comboIndex]
+                poligon.cor_poligono = color
+            corPoligono = color
         #
             
 
@@ -127,19 +156,66 @@ class MainWindow(QMainWindow):
             print(f"Cor das arestas: {color.name()}")  # Exibe a cor selecionada
             self.botaoCorArestas.setStyleSheet(f"background-color: {color.name()}; color: {color.name()}")
             
-            comboIndex = self.comboBox.currentIndex()
-            poligon = ListaPoligonos[comboIndex]
-            poligon.cor_arestas = color
-        
+            self.corArestaChanged.emit(color)
+            
+            comboIndex = self.comboBox.currentIndex() - 1
+            if 0 <= comboIndex < len(ListaPoligonos):
+                poligon = ListaPoligonos[comboIndex]
+                poligon.cor_arestas = color
+            
         #
+
+    def adicionar_ponto(self):
+        
+        pos = self.telaDesenho.mapToScene(QPoint(self.testx, self.testy))
+        
+        self.telaDesenho.desenharPonto(pos.x(), pos.y(), -1, QColor('black'))
+        self.testx += 1
+        if self.testx == 10:
+           self.testy += 1
+           self.testx = 0
+
+
+    def adicionar_poligono(self):
+        print("Pontos liberados!")
+        
+        self.telaDesenho.setUI(False)
+        self.telaDesenho.startFlag = True
+        self.telaDesenho.lineFlag  = False
+
 
     def deletar_poligono(self):
         print("Deleta polígono!")
-        self.deletarPoligono(self.comboBox.currentIndex())
+        self.deletarPoligono(self.comboBox.currentIndex() - 1)
         
 
     def redesenhar_poligonos(self):
         print("Redesenha polígonos!")
+        self.telaDesenho.scene.blockSignals(True)   #Pausa a renderização da tela
+        i = 0
+        for poligono in ListaPoligonos:
+            for item in poligono.itensGraficos.childItems():
+                self.telaDesenho.scene.removeItem(item)         #Primeiro retiramos o polígono da tela
+            
+            #Agora desenhamos todos as suas linhas
+            
+            self.telaDesenho.updateCorAresta(poligono.cor_arestas)
+            self.telaDesenho.updateCorPoligono(poligono.cor_poligono)
+            
+            verticeAnt = poligono.vertices[-1]
+            for vertice in poligono.vertices:
+                self.telaDesenho.desenharReta(verticeAnt, vertice, i)
+                verticeAnt = vertice       
+        
+            i += 1
+
+        self.telaDesenho.scene.blockSignals(False)  #Despausa a renderização da tela. +eficiente
+        self.comboBox.atualizarComboBox()   #Função de atualizar o drop-down e a lista de cores
+        
+        
+        
+        
+        
 
 
     def reiniciar(self):
@@ -148,26 +224,36 @@ class MainWindow(QMainWindow):
         self.redesenhar_poligonos()
             
         
-    def novoPoligono(self):
-        novoPoligono = Poligono(vertices=[])
+    def novoPoligono(self, parent):
+        novoPoligono = Poligono(parent, [], self.telaDesenho.corAresta, self.telaDesenho.corPoligono) 
         ListaPoligonos.append(novoPoligono)
-        self.comboBox.atualizarComboBox()  # Atualiza a ComboBox após adicionar um novo polígono
+        #self.comboBox.atualizarComboBox()  # Atualiza a ComboBox após adicionar um novo polígono
         return len(ListaPoligonos)
+
 
 
     #   Criar a função de deletar o vetor inteiro
     def deletarPoligonos(self):
         for i in range(len(ListaPoligonos)):
-            ListaPoligonos.pop()
-            #Função de atualizar o drop-down e a lista de cores?
-        self.comboBox.atualizarComboBox()
+            self.deletarPoligono(0)
+            
+        self.comboBox.atualizarComboBox()   #Função de atualizar o drop-down e a lista de cores
 
 
-    def deletarPoligono(self, index):     # Recebe um index, e deleta o polígono equivalente.
+    def deletarPoligono(self, index):       # Recebe um index, e deleta o polígono equivalente.
         if 0 <= index < len(ListaPoligonos):
+            poligono = ListaPoligonos[index]
+            
+            #Removemos os itens gráficos da cena
+            for item in poligono.itensGraficos.childItems():
+                self.telaDesenho.scene.removeItem(item)
+                
+            self.telaDesenho.scene.removeItem(poligono.itensGraficos)   #Removemos o grupo de itens gráficos
+            
             ListaPoligonos.pop(index)
-                #Função de atualizar o drop-down e a lista de cores?
-        self.comboBox.atualizarComboBox()
+            self.comboBox.atualizarComboBox()
+                
+        
         
         
     def alterarCorAresta(self, index, cor):

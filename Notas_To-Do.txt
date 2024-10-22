@@ -43,7 +43,9 @@ Isso garante que o polígono não fique em cima das arestas (que tem cores difer
     Como fazer isso? Deve ter biblioteca que faz, mas seria interessante fazer com o alg. do pintor.
 
 
-6 - Implementação do FillPoly em si. Não deve ser mais difícil que fazer toda a interface gráfica.
+6 - Implementação do FillPoly em si. Não deve ser mais difícil que fazer toda a interface gráfica. 
+                
+                e de fato não é
 
 
 

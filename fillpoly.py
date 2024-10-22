@@ -1,6 +1,6 @@
-from interface_fillpoly import *
+import sys
+from PyQt6.QtWidgets import *
+from PyQt6.QtGui import *
+from PyQt6.QtCore import *
 
-app = QApplication(sys.argv)    #Iniciamos a interface
-window = MainWindow()           #Criamos a janela principa 
-window.show()                   #Ativa ela
-app.exec()                      #Executa a UI
+
