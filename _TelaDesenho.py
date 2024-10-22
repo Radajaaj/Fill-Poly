@@ -20,8 +20,8 @@ class TelaDesenho(QGraphicsView):                               #QGraphicsView. 
         self.scene.setSceneRect(0, 0, self.width(), self.height())
 
 
-        self.corAresta = QColor('black')
-        self.corPoligono = QColor('yellow')
+        self.corAresta = QColor('yellow')
+        self.corPoligono = QColor('black')
 
         #
 
@@ -53,6 +53,7 @@ class TelaDesenho(QGraphicsView):                               #QGraphicsView. 
                 print("Posição: ", ListaPoligonos[-1].vertices[-1])
                 
                                                                 #Agora checamos se tem no minimo 2 pontos, e desenhamos a reta:
+            
                 if len(ListaPoligonos[-1].vertices) > 1:
                     self.desenharReta(ListaPoligonos[-1].vertices[-1], ListaPoligonos[-1].vertices[-2], -1)
                 else:
@@ -105,28 +106,30 @@ class TelaDesenho(QGraphicsView):                               #QGraphicsView. 
                                                                 #Dai muda o index pro index do item encontrado
     #
         
-    def desenharPonto(self, x, y, index, cor, size = 1):
-        #print("cor do ponto eh ", cor.name())
-        pontinho = QGraphicsEllipseItem(QRectF(x - size / 2, y - size / 2, size, size))
-        pontinho.setBrush(QBrush(cor))
-        pontinho.setPen(QPen(cor))
-        
+    def desenharPonto(self, x, y, index, cor, size=1):
+        # Cria um ponto 1x1 na posição (x, y)
+        pontinho = QGraphicsRectItem(x, y, size, size)
+        pontinho.setBrush(QBrush(cor))  # Define a cor do ponto
+
         pontinho.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable)
-        
+
+        # Adiciona o ponto ao grupo de itens gráficos do polígono
         ListaPoligonos[index].itensGraficos.addToGroup(pontinho)
-        #TODO self.scene.addItem(pontinho)
-        
-    #
+
+    # TODO: self.scene.addItem(pontinho)
     
-    def desenharReta(self, ponto1, ponto2, index, size = 2):
-        reta = QGraphicsLineItem(ponto1.x(), ponto1.y(), ponto2.x(), ponto2.y())
+    def desenharReta(self, ponto1, ponto2, index, size = 3):
         
-        reta.setPen(QPen(self.corAresta, size))
+        if self.parent.flagBordas == True:
         
-        reta.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable)
-        
-        ListaPoligonos[index].itensGraficos.addToGroup(reta)
-        #TODO self.scene.addItem(reta)
+            reta = QGraphicsLineItem(ponto1.x(), ponto1.y(), ponto2.x(), ponto2.y())
+
+            reta.setPen(QPen(self.corAresta, size))
+
+            reta.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable)
+
+            ListaPoligonos[index].itensGraficos.addToGroup(reta)
+            #TODO self.scene.addItem(reta)
     
     #
     

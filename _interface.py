@@ -5,6 +5,7 @@ class MainWindow(QMainWindow):
     corArestaChanged = pyqtSignal(QColor)           # Signals que vão transmitir as trocas de cores feitas pelos usuários
     corPoligonoChanged = pyqtSignal(QColor)         
     
+    flagBordas = False
         
     def __init__(self):
         super().__init__()
@@ -48,20 +49,26 @@ class MainWindow(QMainWindow):
         
         gridCores.addWidget(QLabel("Cor do Polígono:"), 0, 0)
         self.botaoCorPoligono = QPushButton()
-        self.botaoCorPoligono.setStyleSheet(f"background-color: yellow; color: yellow")
+        self.botaoCorPoligono.setStyleSheet(f"background-color: black; color: black")
         self.botaoCorPoligono.clicked.connect(self.selecionar_cor_poligono)
         gridCores.addWidget(self.botaoCorPoligono, 0, 1)
         
+        
         gridCores.addWidget(QLabel("Cor das Arestas:"), 1, 0)
         self.botaoCorArestas = QPushButton()
-        self.botaoCorArestas.setStyleSheet(f"background-color: black; color: black")
+        self.botaoCorArestas.setStyleSheet(f"background-color: yellow; color: yellow")
         self.botaoCorArestas.clicked.connect(self.selecionar_cor_arestas)
         gridCores.addWidget(self.botaoCorArestas, 1, 1)
         
         LayoutBarraEsquerda.addLayout(gridCores)
         
-        LayoutBarraEsquerda.addWidget(QWidget())
         
+        self.checkboxArestas = QCheckBox("Habilitar Bordas")
+        self.checkboxArestas.setCheckState(Qt.CheckState.Unchecked)
+        self.checkboxArestas.stateChanged.connect(self.habilitar_bordas)
+        LayoutBarraEsquerda.addWidget(self.checkboxArestas)
+        
+        LayoutBarraEsquerda.addWidget(QWidget())
 
         # Botões para apagar, redesenhar, e reiniciar o programa. E iniciar processo de criação de um novo polígono.
         
@@ -73,7 +80,7 @@ class MainWindow(QMainWindow):
         self.botaoDeletar.clicked.connect(self.deletar_poligono)
         LayoutBarraEsquerda.addWidget(self.botaoDeletar)
         
-        self.botaoRedesenhar = QPushButton("Redesenhar Polígonos")
+        self.botaoRedesenhar = QPushButton("Desenhar Polígonos")
         self.botaoRedesenhar.clicked.connect(self.redesenhar_poligonos)
         LayoutBarraEsquerda.addWidget(self.botaoRedesenhar)
         
@@ -82,7 +89,7 @@ class MainWindow(QMainWindow):
         LayoutBarraEsquerda.addWidget(self.botaoReiniciar)
         
         LayoutBarraEsquerda.setStretch(2, 10)
-        LayoutBarraEsquerda.setStretch(5, 50)
+        LayoutBarraEsquerda.setStretch(6, 50)
         
         LayoutBaixo = QHBoxLayout()
         LayoutBaixo.addLayout(LayoutBarraEsquerda)
@@ -127,6 +134,10 @@ class MainWindow(QMainWindow):
             self.corPoligonoChanged.emit(poligon.cor_poligono)
             
     #
+    
+    def habilitar_bordas(self, s):
+        print("Checkbox clicada!")
+        self.flagBordas = self.checkboxArestas.isChecked()
 
     def selecionar_cor_poligono(self):
         color = QColorDialog.getColor()  # Abre o seletor de cores
