@@ -6,27 +6,16 @@ from PyQt6.QtCore import *
 from PyQt6.uic import *
 from math import *
 
-ListaPoligonos = []     # Lista que armazena cada polígono, definido por meio de seus vértices
 
-
-
-
-# OK, falta:
-#   XXCriar o vetor global de pontos de poligonos
-#   XX    Vai ser uma lista de vértices. O último se conecta com o primeiro.
+ListaPoligonos = []     # Lista global que armazena cada polígono, definido por meio de seus vértices
 
 
 def novoVertice(ponto): # Coloca um novo vértice no último polígono da lista de polígonos, e retorna o número de vértices do polígono atual.
-    ListaPoligonos[-1].vertices.append(ponto)    # Ponto vai provavelmente ser do tipo "ponto" do PyQT6
-    return len(ListaPoligonos[-1].vertices)          # Aparentemente Point() é uma classe. Vamo ve no que dá
-    
-    #
-#   XXFunção de unir o vetor ao drop-down
-#   XXFunção de deletar do drop-down
-#   Por fim começar a mexer no desenho de linhas e pixels.
-#   
-    
+    ListaPoligonos[-1].vertices.append(ponto)   #Tipo QPoint do PyQT6. Uma classe simples para armazenar pontos
+    return len(ListaPoligonos[-1].vertices)
 
+    #
+    
 class ComboBoxPoligonos(QComboBox):
     def __init__(self):
         super().__init__()
@@ -42,7 +31,8 @@ class ComboBoxPoligonos(QComboBox):
             self.addItem(f"Polígono {i + 1}")
             i += 1
         self.setCurrentIndex(-1)
-    #def 
+        
+        #
 
 
 class Titulo1(QLabel):
@@ -73,6 +63,5 @@ class Poligono:
         self.itensGraficos  = QGraphicsItemGroup()
 
         self.itensGraficos.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable)
+        
         #
-
-

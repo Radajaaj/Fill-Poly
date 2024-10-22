@@ -23,7 +23,6 @@ class MainWindow(QMainWindow):
         self.showMaximized()
         
 
-
         # Definição do layout principal
         LayoutPrincipal = QVBoxLayout()
         self.titulo1 = Titulo1("Algoritmo FillPoly")
@@ -63,9 +62,8 @@ class MainWindow(QMainWindow):
         
         LayoutBarraEsquerda.addWidget(QWidget())
         
-        
+
         # Botões para apagar, redesenhar, e reiniciar o programa. E iniciar processo de criação de um novo polígono.
-        
         
         self.botaoNovo = QPushButton("Adicionar Polígono")
         self.botaoNovo.clicked.connect(self.adicionar_poligono)
@@ -94,7 +92,6 @@ class MainWindow(QMainWindow):
         LayoutBaixo.setStretch(1, 8)
         
         
-
         self.corArestaChanged.connect(self.telaDesenho.updateCorAresta)     #Conectamos os sinais de trocas de cores com
         self.corPoligonoChanged.connect(self.telaDesenho.updateCorPoligono)     #as funç~eos do widget filho.
                                                                                 #agora, basta usar signal.emit() de forma dinâmica!
@@ -108,6 +105,8 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(widget)
         
         self.testx, self.testy, = 0, 0
+        
+        #
     
     def comboBoxClicada(self):
         
@@ -116,7 +115,6 @@ class MainWindow(QMainWindow):
         if comboIndex == 0:  # This is the "None" option
             #print("Novo polígono selecionado na combobox")
             return
-        
         
         if 1 <= comboIndex < len(ListaPoligonos) + 1:
             poligon = ListaPoligonos[comboIndex - 1]
@@ -128,8 +126,7 @@ class MainWindow(QMainWindow):
             self.corArestaChanged.emit(poligon.cor_arestas)
             self.corPoligonoChanged.emit(poligon.cor_poligono)
             
-    
-    
+    #
 
     def selecionar_cor_poligono(self):
         color = QColorDialog.getColor()  # Abre o seletor de cores
@@ -144,8 +141,8 @@ class MainWindow(QMainWindow):
                 poligon = ListaPoligonos[comboIndex]
                 poligon.cor_poligono = color
             corPoligono = color
-        #
             
+        #
 
     def selecionar_cor_arestas(self):
         color = QColorDialog.getColor()  # Abre o seletor de cores
@@ -162,20 +159,20 @@ class MainWindow(QMainWindow):
             
         #
 
-
-
     def adicionar_poligono(self):
         print("Pontos liberados!")
         
         self.telaDesenho.setUI(False)
         self.telaDesenho.startFlag = True
         self.telaDesenho.lineFlag  = False
-
+        
+        #
 
     def deletar_poligono(self):
         print("Deleta polígono!")
         self.deletarPoligono(self.comboBox.currentIndex() - 1)
         
+        #        
 
     def redesenhar_poligonos(self):
         print("Redesenha polígonos!")
@@ -197,20 +194,19 @@ class MainWindow(QMainWindow):
                 self.telaDesenho.desenharReta(verticeAnt, vertice, i)
                 verticeAnt = vertice   
                 
-            
-        
             i += 1
 
         self.telaDesenho.scene.blockSignals(False)  #Despausa a renderização da tela. +eficiente
         self.comboBox.atualizarComboBox()   #Função de atualizar o drop-down e a lista de cores
         
-        
+        #
 
     def reiniciar(self):
         print("Apaga todos os polígonos!")
         self.deletarPoligonos()
         self.redesenhar_poligonos()
-            
+        
+        #
         
     def novoPoligono(self, parent):
         novoPoligono = Poligono(parent, [], self.telaDesenho.corAresta, self.telaDesenho.corPoligono) 
@@ -218,7 +214,7 @@ class MainWindow(QMainWindow):
         #self.comboBox.atualizarComboBox()  # Atualiza a ComboBox após adicionar um novo polígono
         return len(ListaPoligonos)
 
-
+        #
 
     #   Criar a função de deletar o vetor inteiro
     def deletarPoligonos(self):
@@ -227,6 +223,7 @@ class MainWindow(QMainWindow):
             
         self.comboBox.atualizarComboBox()   #Função de atualizar o drop-down e a lista de cores
 
+        #
 
     def deletarPoligono(self, index):       # Recebe um index, e deleta o polígono equivalente.
         if 0 <= index < len(ListaPoligonos):
@@ -241,19 +238,16 @@ class MainWindow(QMainWindow):
             ListaPoligonos.pop(index)
             self.comboBox.atualizarComboBox()
                 
-        
-        
+        #
         
     def alterarCorAresta(self, index, cor):
         if 0 <= index < len(ListaPoligonos):
             ListaPoligonos[index].cor_arestas = cor
 
+        #
 
     def alterarCorPoligono(self, index, cor):
         if 0 <= index < len(ListaPoligonos):
             ListaPoligonos[index].cor_poligono = cor
         
-        
-
-
-
+        #
