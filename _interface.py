@@ -1,4 +1,4 @@
-from _widgets import *
+from _TelaDesenho import *
 
 
 class MainWindow(QMainWindow):
@@ -66,9 +66,6 @@ class MainWindow(QMainWindow):
         
         # Botões para apagar, redesenhar, e reiniciar o programa. E iniciar processo de criação de um novo polígono.
         
-        self.botaoPonto = QPushButton("Adicionar Ponto")
-        self.botaoPonto.clicked.connect(self.adicionar_ponto)
-        LayoutBarraEsquerda.addWidget(self.botaoPonto)
         
         self.botaoNovo = QPushButton("Adicionar Polígono")
         self.botaoNovo.clicked.connect(self.adicionar_poligono)
@@ -117,7 +114,7 @@ class MainWindow(QMainWindow):
         comboIndex = self.comboBox.currentIndex()
         
         if comboIndex == 0:  # This is the "None" option
-            print("Novo polígono selecionado na combobox")
+            #print("Novo polígono selecionado na combobox")
             return
         
         
@@ -165,15 +162,6 @@ class MainWindow(QMainWindow):
             
         #
 
-    def adicionar_ponto(self):
-        
-        pos = self.telaDesenho.mapToScene(QPoint(self.testx, self.testy))
-        
-        self.telaDesenho.desenharPonto(pos.x(), pos.y(), -1, QColor('black'))
-        self.testx += 1
-        if self.testx == 10:
-           self.testy += 1
-           self.testx = 0
 
 
     def adicionar_poligono(self):
@@ -202,10 +190,14 @@ class MainWindow(QMainWindow):
             self.telaDesenho.updateCorAresta(poligono.cor_arestas)
             self.telaDesenho.updateCorPoligono(poligono.cor_poligono)
             
+            self.telaDesenho.fillpoly(i, poligono)  
+              
             verticeAnt = poligono.vertices[-1]
             for vertice in poligono.vertices:
                 self.telaDesenho.desenharReta(verticeAnt, vertice, i)
-                verticeAnt = vertice       
+                verticeAnt = vertice   
+                
+            
         
             i += 1
 
@@ -213,13 +205,9 @@ class MainWindow(QMainWindow):
         self.comboBox.atualizarComboBox()   #Função de atualizar o drop-down e a lista de cores
         
         
-        
-        
-        
-
 
     def reiniciar(self):
-        print("Apaga todos os polígonos e redesenha tudo")
+        print("Apaga todos os polígonos!")
         self.deletarPoligonos()
         self.redesenhar_poligonos()
             

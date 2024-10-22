@@ -1,0 +1,53 @@
+Poggers
+
+Vamo ve
+dividir em etapas
+
+Assumimos que iremos percorrer o poligono em ordem horária (AB, BC, CD, DA, ...)
+
+1 - Calcular numero de scanlines                            Ns = Ymax - Ymin
+
+1.1 - Definimos um vetor de tamanho Ns-1,                   vetor[Ns - 1]
+        inicializado com 1 vetor em cada posição
+
+2 - Loop for para ir pegando cada dupla de vertices
+    vertAnterior = poligono.vertices[-1]
+    for i in poligono.vertices 
+        vê qual ue é maior
+#------ 3 - calculoso
+|       vertAnterior = i
+|       # Por que pegar o vertAnterior antes?
+|       # Assim o último calculo (DA) é feito primeiro, então ele não fica de fora quando o laço for terminar.
+|
+\/
+3 - Para cada loop de 2, faremos vários appends nos vetores.
+
+4 - Calculamos e armazenamos 1 / o coef. angular da reta    1/m = dX / dY = (Xb - Xa)/(Yb - Ya)
+
+4 - Então outro loop for, indo de Ymin até Ymax-1           LOOP INCREMENTAL
+
+        vetor[Ymin].append(X1, Y1)
+        for Ymin+1 in Ymax-1:
+            anterior = vetor[Ymin][-1]
+            novo = anteriorY + 1, anteriorX + 1/m           ISSO AQUI FAZ SER INCREMENTAL
+            vetor[Ymin+1].append(novo)
+        e assim vai
+
+5 - Terminados todos os loops, temos o nosso vetor de vetores [Ns-1]
+    5.1 Fazemos bubble sort ou quick sort nele, com base nos valores de X1
+
+6 - Agora, todos os vetores tem tamanho par. Para cada par de pontos, fazemos um loop for de drawPoint(),
+    DO CEIL(Xini) AO FLOOR (Xfim). Não esqueça disso.
+
+[NS-1]
+[]
+[]
+[]
+[]
+[]
+[]
+[]
+[]
+[]
+[]
+[]
