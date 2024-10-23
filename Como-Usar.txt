@@ -22,17 +22,14 @@ aplicarão aos novos polígonos.
 
 3   - "Habilitar Bordas": O usuário pode escolher se o poligono terá bordas de cor diferente.
 
-4   - "Retas em vez de pixels": Essa opção muda um pouco a forma do funcionamento do FillPoly. Em vez de desenhar cada scanline
-    pixel por pixel, o algoritmo vai passar a desenhar retas entre cada interseção
-
-5   - "Adicionar polígono": Ao clicar nesse botão, o usuário poderá adicionar novos polígonos com cliques na tela branca, à direita:
+4   - "Adicionar polígono": Ao clicar nesse botão, o usuário poderá adicionar novos polígonos com cliques na tela branca, à direita:
     Botão esquerdo: adiciona novos vértices ao polígono sendo definidos
     Botão direito : adiciona um último vértice ao polígono sendo definido, e armazena ele na memória.
 
     Para renderizar o polígono, clique em "Desenhar Polígonos".
 
-6   - "Deletar polígono": Remove o polígono selecionado.
+5   - "Deletar polígono": Remove o polígono selecionado.
 
-7   - "Desenhar Polígonos": Executa o FillPoly nos polígonos. Pode demorar um pouco.
+6   - "Desenhar Polígonos": Executa o FillPoly nos polígonos. Pode demorar um pouco.
 
-8   - "Reiniciar": Remove todos os polígonos da tela.
+7   - "Reiniciar": Remove todos os polígonos da tela.
