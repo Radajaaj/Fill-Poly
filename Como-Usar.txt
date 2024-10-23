@@ -1,0 +1,38 @@
+1 - Primeiro, é necessário ter python 3 instalado na sua máquina. Instale em https://www.python.org/downloads/
+2 - Com python 3 já instalado, será necessário instalar algumas bibliotecas:
+    2.1 - No terminal, insira os seguintes comandos:
+        "pip install pyqt6"
+        "pip install math"
+3 - Agora o software está pronto para ser executado. Para fazer isso, abra o terminal dentro da pasta aonde está o código-fonte, e insira o comando:
+        "python _main.py"
+4 - O Software entrará em execução
+
+_________________________________________
+____________Instruções de Uso____________
+À esquerda podemos ver a nossa barra de lateral, que possui diversas ferramentas essenciais para o uso do programa.
+Abaixo está uma descrição do que cada coisa faz:
+
+1   - "Selecionar Polígonos": É um menu drop-down aonde o usuário pode escolher dentre os polígonos já definidos
+
+2   - "Selecionar Cores": Ao clicar no quadrado colorido, o usuário poderá escolher as cores das arestas, e a cor
+de preenchimento do polígono selecionado. Por padrão, nenhum polígono é selecionado. Nesse caso, as cores escolhidas se
+aplicarão aos novos polígonos.
+    O usuário pode selecionar um polígono por meio do menu drop-down, ou ao clicar em cima dele.
+    Quando um polígono está em cima do outro, será dada prioridade ao mais recente.
+
+3   - "Habilitar Bordas": O usuário pode escolher se o poligono terá bordas de cor diferente.
+
+4   - "Retas em vez de pixels": Essa opção muda um pouco a forma do funcionamento do FillPoly. Em vez de desenhar cada scanline
+    pixel por pixel, o algoritmo vai passar a desenhar retas entre cada interseção
+
+4   - "Adicionar polígono": Ao clicar nesse botão, o usuário poderá adicionar novos polígonos com cliques na tela branca, à direita:
+    Botão esquerdo: adiciona novos vértices ao polígono sendo definidos
+    Botão direito : adiciona um último vértice ao polígono sendo definido, e armazena ele na memória.
+
+    Para renderizar o polígono, clique em "Desenhar Polígonos".
+
+5   - "Deletar polígono": Remove o polígono selecionado.
+
+6   - "Desenhar Polígonos": Executa o FillPoly nos polígonos. Pode demorar um pouco.
+
+7   - "Reiniciar": Remove todos os polígonos da tela.

@@ -4,7 +4,7 @@ from PyQt6.QtWidgets import *
 from PyQt6.QtGui import *
 from PyQt6.QtCore import *
 from PyQt6.uic import *
-from math import *
+from math import floor, ceil
 
 
 ListaPoligonos = []     # Lista global que armazena cada polígono, definido por meio de seus vértices

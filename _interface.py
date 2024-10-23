@@ -6,6 +6,7 @@ class MainWindow(QMainWindow):
     corPoligonoChanged = pyqtSignal(QColor)         
     
     flagBordas = False
+
         
     def __init__(self):
         super().__init__()
@@ -13,12 +14,12 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("FillPoly")
         
         # Obtenha a geometria da tela
-        screen_geometry = QApplication.primaryScreen().geometry()
-        screen_width = int(screen_geometry.width() * 0.8)
-        screen_height = int(screen_geometry.height() * 0.8)
+        self.screen_geometry = QApplication.primaryScreen().geometry()
+        self.screen_width = int(self.screen_geometry.width() * 0.8)
+        self.screen_height = int(self.screen_geometry.height() * 0.8)
 
         # Defina o tamanho fixo da janela para a resolução da tela
-        self.setFixedSize(QSize(screen_width, screen_height))
+        self.setFixedSize(QSize(self.screen_width, self.screen_height))
         
         # Mostre a janela maximizada
         self.showMaximized()
@@ -63,10 +64,13 @@ class MainWindow(QMainWindow):
         LayoutBarraEsquerda.addLayout(gridCores)
         
         
-        self.checkboxArestas = QCheckBox("Habilitar Bordas")
+        self.checkboxArestas = QCheckBox("Desenhar Bordas")
         self.checkboxArestas.setCheckState(Qt.CheckState.Unchecked)
         self.checkboxArestas.stateChanged.connect(self.habilitar_bordas)
         LayoutBarraEsquerda.addWidget(self.checkboxArestas)
+        
+          
+        
         
         LayoutBarraEsquerda.addWidget(QWidget())
 
@@ -138,7 +142,9 @@ class MainWindow(QMainWindow):
     def habilitar_bordas(self, s):
         print("Checkbox clicada!")
         self.flagBordas = self.checkboxArestas.isChecked()
-
+        
+    #
+    
     def selecionar_cor_poligono(self):
         color = QColorDialog.getColor()  # Abre o seletor de cores
         if color.isValid():
@@ -187,6 +193,9 @@ class MainWindow(QMainWindow):
 
     def redesenhar_poligonos(self):
         print("Redesenha polígonos!")
+        
+        self.telaDesenho.setUI(False)
+        
         self.telaDesenho.scene.blockSignals(True)   #Pausa a renderização da tela
         i = 0
         for poligono in ListaPoligonos:
@@ -202,13 +211,15 @@ class MainWindow(QMainWindow):
               
             verticeAnt = poligono.vertices[-1]
             for vertice in poligono.vertices:
-                self.telaDesenho.desenharReta(verticeAnt, vertice, i)
+                self.telaDesenho.desenharReta(verticeAnt, vertice, i, 3, poligono.cor_arestas)
                 verticeAnt = vertice   
                 
             i += 1
 
         self.telaDesenho.scene.blockSignals(False)  #Despausa a renderização da tela. +eficiente
         self.comboBox.atualizarComboBox()   #Função de atualizar o drop-down e a lista de cores
+        
+        self.telaDesenho.setUI(True)
         
         #
 

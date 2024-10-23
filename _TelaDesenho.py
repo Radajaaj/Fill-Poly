@@ -11,6 +11,9 @@ class TelaDesenho(QGraphicsView):                               #QGraphicsView. 
         super().__init__()
         self.parent = parent                                    #Ponteiro para fácil acesso ao widget pai
         
+        self.setOptimizationFlags(
+            QGraphicsView.OptimizationFlag.DontAdjustForAntialiasing |
+            QGraphicsView.OptimizationFlag.DontSavePainterState)
                                                                 #Aqui criamos um retângulo branco para cobrir todo o fundo da cena.
         self.setBackgroundBrush(QBrush(QColor("white")))
         self.scene = QGraphicsScene(self)
@@ -55,7 +58,7 @@ class TelaDesenho(QGraphicsView):                               #QGraphicsView. 
                                                                 #Agora checamos se tem no minimo 2 pontos, e desenhamos a reta:
             
                 if len(ListaPoligonos[-1].vertices) > 1:
-                    self.desenharReta(ListaPoligonos[-1].vertices[-1], ListaPoligonos[-1].vertices[-2], -1)
+                    self.desenharReta(ListaPoligonos[-1].vertices[-1], ListaPoligonos[-1].vertices[-2], -1, 3, self.corAresta)
                 else:
                     self.desenharPonto(int(pos.x()), int(pos.y()), -1, self.corAresta)  #  Desenhar o primeiro ponto definido
                 #TODO
@@ -81,8 +84,8 @@ class TelaDesenho(QGraphicsView):                               #QGraphicsView. 
                     print("Posição: ", ListaPoligonos[-1].vertices[-1])
 
                     # Desenhamos as 2 últimas retas
-                    self.desenharReta(ListaPoligonos[-1].vertices[-1], ListaPoligonos[-1].vertices[-2], -1)
-                    self.desenharReta(ListaPoligonos[-1].vertices[-1], ListaPoligonos[-1].vertices[0], -1)
+                    self.desenharReta(ListaPoligonos[-1].vertices[-1], ListaPoligonos[-1].vertices[-2], -1, 3, self.corAresta)
+                    self.desenharReta(ListaPoligonos[-1].vertices[-1], ListaPoligonos[-1].vertices[0], -1, 3, self.corAresta)
 
                 #print("\n-------------------\nVETOR FINAL\n", self.vetorPontos, "\n----------------\n")
                 #self.vetorPontos.clear()
@@ -110,21 +113,21 @@ class TelaDesenho(QGraphicsView):                               #QGraphicsView. 
         # Cria um ponto 1x1 na posição (x, y)
         pontinho = QGraphicsRectItem(x, y, size, size)
         pontinho.setBrush(QBrush(cor))  # Define a cor do ponto
+        pontinho.setPen(QPen(cor))
 
         pontinho.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable)
 
         # Adiciona o ponto ao grupo de itens gráficos do polígono
         ListaPoligonos[index].itensGraficos.addToGroup(pontinho)
 
-    # TODO: self.scene.addItem(pontinho)
     
-    def desenharReta(self, ponto1, ponto2, index, size = 3):
+    def desenharReta(self, ponto1, ponto2, index, size, cor):
         
         if self.parent.flagBordas == True:
         
             reta = QGraphicsLineItem(ponto1.x(), ponto1.y(), ponto2.x(), ponto2.y())
 
-            reta.setPen(QPen(self.corAresta, size))
+            reta.setPen(QPen(cor, size))
 
             reta.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable)
 
@@ -159,6 +162,9 @@ class TelaDesenho(QGraphicsView):                               #QGraphicsView. 
             Ymin = 999999
             Ymax = 0
             vetorPoly = []
+            
+            
+            
 
             for i in poligono.vertices:                         # Primeiro, percorremos por todos os vértices, para obter o Ymin e o Ymax
                 if i.y() < Ymin:
@@ -231,21 +237,37 @@ class TelaDesenho(QGraphicsView):                               #QGraphicsView. 
                 #print("Vetor ", i, ": ", vetorPoly[i])
 
             #Pronto. Temos tudo feito, e o vetorPoly foi criado e populado. Agora, vamos printando ponto por ponto.
-    
-            for scanline in vetorPoly:
+            scan = 0
+            
+            #Vamos fazer ele renderizar de 50 em 50 scanlines.
+            
+            
+            
+            while vetorPoly:
+                scanline = vetorPoly[0]
+                lenScan  = len(scanline)
+
+                print("scanline ", scan, " / ", Ns)
+                scan += 1
                 if len(scanline) == 1:
                     self.desenharPonto(int(scanline[-1].x()), int(scanline[-1].y()), indexPoly, poligono.cor_poligono)
-            
+
                 if len(scanline) % 2 != 0:
                     print("Quantia impar de pontos. Checar terminal")
 
                 #Agora pintamos entre cada par de pontos
-                
-                for i in range(0, len(scanline) - 1, 2):
+
+                for i in range(0, lenScan - 1, 2):
                     primeiro = scanline[i]
                     segundo  = scanline[i + 1]
 
                     for j in range(int(primeiro.x()), int(segundo.x())):
                         self.desenharPonto(floor(j), ceil(primeiro.y()), indexPoly, poligono.cor_poligono)
+                        #QApplication.processEvents()
+
+                if scan % 30 == 0:
+                    QApplication.processEvents()
+
+                vetorPoly.remove(scanline)
 
     #
